@@ -3,7 +3,7 @@ Section: tex
 Priority: extra
 Maintainer: Peter Ralph <petrel.harp@gmail.com>
 Build-Depends: debhelper (>= 9), libparse-recdescent-perl, libimage-size-perl, libarchive-zip-perl, libfile-which-perl, libio-string-perl, libjson-xs-perl, liburi-perl, libwww-perl, libxml-libxml-perl, libxml-libxslt-perl, texlive-latex-base
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 Homepage: http://dlmf.nist.gov/LaTeXML/
 #Vcs-Git: git://anonscm.debian.org/collab-maint/latexml.git
 #Vcs-Browser: http://anonscm.debian.org/?p=collab-maint/latexml.git;a=summary
