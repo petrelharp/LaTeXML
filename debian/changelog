@@ -1,14 +1,6 @@
-latexml (0.8.1-2~1.gbp31de19) UNRELEASED; urgency=medium
-
-  ** SNAPSHOT build @31de19203b15ac849b48014e522e5e0963f7dfcb **
-
-  * UNRELEASED
-
- -- Peter Ralph <petrel.harp@gmail.com>  Sun, 29 Mar 2015 17:01:22 -0700
-
 latexml (0.8.1-1) unstable; urgency=medium
 
-  * New upstream release (0.8.1).
+  * New upstream release (0.8.1) (Closes: #773943)
 
  -- Peter Ralph <petrel.harp@gmail.com>  Sun, 29 Mar 2015 15:58:31 -0700
 
