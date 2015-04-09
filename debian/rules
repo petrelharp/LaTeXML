@@ -56,7 +56,7 @@ make-orig-tar:
 	v=`dpkg-parsechangelog --show-field version | sed -e s/-.*$$//` ;\
 	d=latexml-$$v; rm -rf $$d ; mkdir $$d ; git checkout v$$v ; \
 	git checkout-index -a -f --prefix=$$d/ ; git checkout master ; \
-	tar -cvzf latexml_$$v.orig.tar.gz $$d ; rm -rf $d
+	tar -cvzf latexml_$$v.orig.tar.gz $$d ; rm -rf $$d
 
 # Build architecture-dependent files here.
 binary-arch: build-stamp
