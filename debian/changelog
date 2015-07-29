@@ -1,3 +1,10 @@
+latexml (0.8.1-2) UNRELEASED; urgency=medium
+
+  * switched dependency from transitional package perlmagick to 
+    libimage-magick-perl (Closes: #789233)
+
+ -- Peter Ralph <petrel.harp@gmail.com>  Wed, 29 Jul 2015 09:45:53 -0700
+
 latexml (0.8.1-1) unstable; urgency=medium
 
   * New upstream release (0.8.1) (Closes: #773943)
