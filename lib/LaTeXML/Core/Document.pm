@@ -1161,9 +1161,7 @@ sub markXMNodeVisibility_aux {
     #    $self->markXMNodeVisibility_aux($self->realizeXMNode($node),$cvis,$pvis); }
     my $id = $node->getAttribute('idref');
     if (!$id) {
-      my $key = $node->getAttribute('_xmkey');
-      Warn('expected', 'id', $self, "Missing idref on ltx:XMRef",
-        ($key ? ("_xmkey is $key") : ()));
+      Warn('expected', 'id', $self, "Missing id on ltx:XMRef");
       return; }
     my $reffed = $self->lookupID($id);
     if (!$reffed) {
@@ -1895,7 +1893,7 @@ on the appropriate representation.
 =item C<< $document->setAttribute($node,$key,$value); >>
 
 Sets the attribute C<$key> to C<$value> on C<$node>.
-This method is preferred over the direct LibXML one, since it
+This method is prefered over the direct LibXML one, since it
 takes care of decoding namespaces (if C<$key> is a qname),
 and also manages recording of xml:id's.
 

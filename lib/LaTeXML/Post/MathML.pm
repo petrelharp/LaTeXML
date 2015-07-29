@@ -336,6 +336,9 @@ sub pmml {
   if (getQName($node) eq 'ltx:XMRef') {
     $refr = $node;
     $node = realize($node); }
+  # Establish the source XMath node to be used for associating generated MathML
+  # A bit of heuristic is used (see the code)
+  local $LaTeXML::MathML::SOURCENODE = findPresentationSourceNode($node);
   # Bind any other style information from the refering node or the current node
   # so that any tokens synthesized from strings recover that style.
   local $LaTeXML::MathML::SIZE  = _getattr($refr, $node, 'fontsize') || $LaTeXML::MathML::SIZE;
@@ -369,7 +372,7 @@ sub pmml {
     my $ocl = $$result[1]{class};
     $$result[1]{class} = (!$ocl || ($ocl eq $cl) ? $cl : "$ocl $cl"); }
   # Associate the generated node with the source XMath node.
-  $LaTeXML::Post::MATHPROCESSOR->associateNode($result, $node);
+  $LaTeXML::Post::MATHPROCESSOR->associateNode($result, $LaTeXML::MathML::SOURCENODE);
   return $result; }
 
 sub first_element {
@@ -379,6 +382,20 @@ sub first_element {
     return $c if $c->nodeType == XML_ELEMENT_NODE;
     $c = $c->nextSibling; }
   return; }
+
+# Establish the source XMath node to be used for associating generated MathML
+sub findPresentationSourceNode {
+  my ($node) = @_;
+  # if it is visible from the content side, we'll consider it the source.
+  return $node if $node->getAttribute('_cvis');
+  # Otherwise, dig a bit deeper if it seems to be an applied token.
+  if ((getQName($LaTeXML::MathML::SOURCENODE) || 'unknown') eq 'ltx:XMDual') {
+    my $sn = first_element($LaTeXML::MathML::SOURCENODE);
+    my $q = getQName($sn) || 'unknown';
+    return $sn if $q eq 'ltx:XMTok';
+    if ($q eq 'ltx:XMApp') {
+      return first_element($sn); } }
+  return $LaTeXML::MathML::SOURCENODE; }
 
 sub _getattr {
   my ($refr, $node, $attribute) = @_;
@@ -695,7 +712,7 @@ my %fences = (                                                    # CONSTANT
   '(' => 1, ')' => 1, '[' => 1, ']' => 1, '{' => 1, '}' => 1, "\x{201C}" => 1, "\x{201D}" => 1,
   "\`" => 1, "'" => 1, "<" => 1, ">" => 1,
   "\x{2329}" => 1, "\x{232A}" => 1, # angle brackets; NOT mathematical, but balance in case they show up.
-  "\x{27E8}" => 1, "\x{27E9}" => 1,                                      # angle brackets (preferred)
+  "\x{27E8}" => 1, "\x{27E9}" => 1,                                      # angle brackets (prefered)
   "\x{230A}" => 1, "\x{230B}" => 1, "\x{2308}" => 1, "\x{2309}" => 1);
 
 my %punctuation = (',' => 1, ';' => 1, "\x{2063}" => 1);                 # CONSTANT
@@ -981,9 +998,12 @@ sub cmml {
   my ($node) = @_;
   if (getQName($node) eq 'ltx:XMRef') {
     $node = realize($node); }
+  # Establish the source XMath node to be used for associating generated MathML
+  local $LaTeXML::MathML::SOURCENODE = ($node->getAttribute('_pvis') && $node)
+    || $LaTeXML::MathML::SOURCENODE;
   my $result = cmml_internal($node);
   # Associate the generated node with the source XMath node.
-  $LaTeXML::Post::MATHPROCESSOR->associateNode($result, $node);
+  $LaTeXML::Post::MATHPROCESSOR->associateNode($result, $LaTeXML::MathML::SOURCENODE);
   return $result; }
 
 sub cmml_internal {
@@ -1686,19 +1706,6 @@ DefMathML('Apply:?:continued-fraction', sub {
     else {
       local $LaTeXML::MathML::STYLE = 'text';
       return ['m:mfrac', {}, pmml($numer), pmml($denom)]; } });
-
-#================================================================================
-# A Hack for Demo/Testing Purposes ONLY!!!
-# [Illustrates that we'd like these to be defineable in bindings!]
-DefMathML('Apply:?:hack-definite-integral', undef,
-  sub {
-    my ($op, $lower, $upper, $integrand, $variable) = @_;
-    return ['m:apply', {},
-      ['m:int'],
-      ['m:bvar',     {}, cmml($variable)],
-      ['m:lowlimit', {}, cmml($lower)],
-      ['m:lowupper', {}, cmml($upper)],
-      cmml($integrand)]; });
 
 #================================================================================
 1;

@@ -4449,7 +4449,6 @@
   name CDATA #IMPLIED
   role CDATA #IMPLIED
   select CDATA #IMPLIED
-  scope CDATA #IMPLIED
   format CDATA #IMPLIED>
 
 <!ELEMENT ltx:toclist (ltx:tocentry)*>

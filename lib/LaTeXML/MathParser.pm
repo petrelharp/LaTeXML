@@ -1010,7 +1010,7 @@ my %balanced = (    # [CONSTANT]
   "\x{230A}" => "\x{230B}",    # lfloor, rfloor
   "\x{2308}" => "\x{2309}",    # lceil, rceil
   "\x{2329}" => "\x{232A}",    # angle brackets; NOT mathematical, but balance in case they show up.
-  "\x{27E8}" => "\x{27E9}",    # angle brackets (preferred)
+  "\x{27E8}" => "\x{27E9}",    # angle brackets (prefered)
   "\x{2225}" => "\x{2225}",    # lVert, rVert
 );
 # For enclosing a single object
@@ -1144,9 +1144,8 @@ sub ApplyNary {
       # Check that ops are used in same way.
       && !(grep { (p_getAttribute($rop, $_) || '<none>') ne (p_getAttribute($rop1, $_) || '<none>') }
         qw(mathstyle))    # Check ops are used in similar way
-          # Check that arg1 isn't wrapped, fenced or enclosed in some restrictive way
-          # Especially an ID! (but really only important if the id is referenced somewhere?)
-      && !(grep { p_getAttribute(realizeXMNode($arg1), $_) } qw(open close enclose xml:id))) {
+                          # Check that arg1 isn't wrapped, fenced or enclosed in some restrictive way
+      && !(grep { p_getAttribute(realizeXMNode($arg1), $_) } qw(open close enclose))) {
       # Note that $op1 GOES AWAY!!!
       ReplacedBy($op1, $rop);
       push(@args, @args1); }
@@ -1169,12 +1168,9 @@ sub ApplyNary {
 sub ReplacedBy {
   my ($lostnode, $keepnode) = @_;
   if (my $lostid = p_getAttribute($lostnode, 'xml:id')) {
-    # Could be we want to generate an id for $keepnode, here?
     if (my $keepid = p_getAttribute($keepnode, 'xml:id')) {
       # print STDERR "LOST $lostid use instead $keepid\n";
-      $$LaTeXML::MathParser::LOSTNODES{$lostid} = $keepid; }
-    else {
-      print STDERR "LOST $lostid but no replacement!\n"; } }
+      $$LaTeXML::MathParser::LOSTNODES{$lostid} = $keepid; } }
   return; }
 
 # ================================================================================
@@ -1320,7 +1316,7 @@ Create a new C<XMApp> node representing the application of the node
 C<$op> to the arguments found in C<@stuff>.  C<@stuff> are 
 delimited arguments in the sense that the leading and trailing nodes
 should represent open and close delimiters and the arguments are
-separated by punctuation nodes.  The text of these delimiters and
+seperated by punctuation nodes.  The text of these delimiters and
 punctuation are used to annotate the operator node with
 C<argopen>, C<argclose> and C<separator> attributes.
 
